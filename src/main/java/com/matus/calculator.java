@@ -6,7 +6,7 @@ import javax.swing.*;
 
 /**
  *@author Mateusz Stanuszek
- *Dokumenttttacja techniczna
+ *Dokumentacja techniczna
  *a tutaj cos innego
  */
  
