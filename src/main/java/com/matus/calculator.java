@@ -6,14 +6,13 @@ import javax.swing.*;
 
 /**
  *@author Mateusz Stanuszek
- *Dokumenttttacja techniczna
+ *Dokumentacja techniczna
  */
  
 class calculator extends JFrame implements ActionListener { 
     
     private static final long serialVersionUID = 1L;
     
-    JButton btn1111 = new JButton("11111");
     
     JButton btn1 = new JButton("1");
     JButton btn2 = new JButton("2");
