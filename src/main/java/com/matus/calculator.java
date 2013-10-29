@@ -6,8 +6,8 @@ import javax.swing.*;
 
 /**
  *@author Mateusz Stanuszek
- *Dokumentacja techniczna
- *a tutaj cos innego
+ *Dokumentacja teiczna
+ *a tutaj cos innegodsad
  */
  
 class calculator extends JFrame implements ActionListener { 
