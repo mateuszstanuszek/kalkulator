@@ -5,10 +5,8 @@ import java.awt.event.*;
 import javax.swing.*;
 
 /**
- *@author Mateusz Stanuszek
- *Dokumentacja techniczna
- *inna wiadomosc
- *cos nowego
+ 	@author Grzegorz Kapcia
+ 	
  */
  
 class calculator extends JFrame implements ActionListener { 
