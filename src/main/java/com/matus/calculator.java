@@ -5,7 +5,9 @@ import java.awt.event.*;
 import javax.swing.*;
 
 /**
- 	@author Grzegorz Kapcia
+ 	zmianan
+ 	zaminana
+ 	
  	
  */
  
@@ -15,9 +17,9 @@ class calculator extends JFrame implements ActionListener {
     
     JButton btn1111 = new JButton("11111");
     
-    JButton btn1 = new JButton("1");
-    JButton btn2 = new JButton("2");
-    JButton btn3 = new JButton("3");
+    //JButton btn1 = new JButton("1");
+    //JButton btn2 = new JButton("2");
+    //JButton btn3 = new JButton("3");
     JButton btn_arti = new JButton("+");
     
     JButton btn4 = new JButton("4");
