@@ -50,7 +50,7 @@ class calculator extends JFrame implements ActionListener {
     
     public calculator() {
         
-        frame = new JFrame("SIMPLE JAVA CALCULATOR");
+        frame = new JFrame("TEST JAVA CALCULATOR");
         frame.setSize(320,320);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
