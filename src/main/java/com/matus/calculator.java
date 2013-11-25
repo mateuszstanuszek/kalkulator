@@ -46,9 +46,11 @@ class calculator extends JFrame implements ActionListener {
     double int_number2 = 0;
     double result = 0;
     
+    private JFrame frame;
+    
     public calculator() {
         
-        JFrame frame = new JFrame("SIMPLE JAVA CALCULATOR");
+        frame = new JFrame("SIMPLE JAVA CALCULATOR");
         frame.setSize(320,320);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
@@ -233,6 +235,9 @@ class calculator extends JFrame implements ActionListener {
                     String[] kelime = null;
                     kelime = str_number.split("\\/");
                     int_number2=Integer.parseInt(kelime[1].replace("=",""));
+                    if(int_number2 == 0 ) {
+                    	JOptionPane.showMessageDialog(frame, "Pamiętaj cholero, nie dziel przez zero!");
+                    }
                  result=int_number1/int_number2;
                  txt.setText(str_number+Double.toString(result));
                  break;
