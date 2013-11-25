@@ -69,7 +69,7 @@
     <section>
       <title>Stworzenie projektu poprzez MAVEN</title>
 
-      <para/>
+      <para>Projekt można utowrzyć za pomocą MAVENa<programlisting>mvn archetype:generate</programlisting></para>
     </section>
   </chapter>
 
