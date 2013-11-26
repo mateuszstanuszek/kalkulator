@@ -2,55 +2,175 @@ package com.matus;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
+/**
+* 
+* Klasa tworzaca okno programu kalkulator,ktorym mozemy wykonywac opracje dodawania, odejmowania, mnozenia i dzielenia.
+* Po ukonczonej operacji mozliwosc wyczyszczenia pola z dzialaniem i rozpoczecia nowej operacji.
+* @author Grzegorz Kapcia 
+* @author Mateusz Stanuszek
+* @since 20-10-2013
+* @version 25-11-2013
+* @see java.awt.event.ActionListener
+* @see javax.swing.JFrame
+*/
 
  
-class calculator extends JFrame implements ActionListener { 
+public class calculator extends JFrame implements ActionListener,KeyListener{ 
     
-    private static final long serialVersionUID = 1L;
-    
-    JButton btn1111 = new JButton("11111");
-    
-    JButton btn1 = new JButton("20");
-    JButton btn2 = new JButton("15");
-    JButton btn3 = new JButton("3");
-    JButton btn_arti = new JButton("+");
-    
-    JButton btn4 = new JButton("4");
-    JButton btn5 = new JButton("5");
-    JButton btn6 = new JButton("6");
-    JButton btn_eksi = new JButton("-");
-    
-    JButton btn7 = new JButton("7");
-    JButton btn8 = new JButton("8");
-    JButton btn9 = new JButton("9");
-    JButton btn_carpi = new JButton("*");
-    
-    JButton btn0 = new JButton("0");
-    JButton btn_clr = new JButton("CLR");
-    JButton btn_del = new JButton("DEL");
-    JButton btn_bolu = new JButton("/");
-    JButton btn_esit = new JButton("=");
 
-    TextField txt=new TextField(15);
+	private static final long serialVersionUID = -4211365542340727420L;
+	/** Przycisk cyfra 1 */
+	private JButton btn1 = new JButton("1");
+	/** Przycisk cyfra 2 */
+    private JButton btn2 = new JButton("2");
+    /** Przycisk cyfra 3 */
+    private JButton btn3 = new JButton("3");
+    /** Przycisk dodaj */
+    private JButton btn_arti = new JButton("+");
+    /** Przycisk cyfra 4 */
+    private JButton btn4 = new JButton("4");
+    /** Przycisk cyfra 5 */
+    private JButton btn5 = new JButton("5");
+    /** Przycisk cyfra 6 */
+    private JButton btn6 = new JButton("6");
+    /** Przycisk odejmij */
+    private JButton btn_eksi = new JButton("-");
+    /** Przycisk cyfra 7 */
+    private JButton btn7 = new JButton("7");
+    /** Przycisk cyfra 8 */
+    private JButton btn8 = new JButton("8");
+    /** Przycisk cyfra 9 */
+    private JButton btn9 = new JButton("9");
+    /** Przycisk mnozenie */
+    private JButton btn_carpi = new JButton("*");
+    /** Przycisk cyfra 0 */
+    private JButton btn0 = new JButton("0");
     
-    String str_number = "";
-    int operation = 0;
-    double int_number1 = 0;
-    double int_number2 = 0;
-    double result = 0;
+    /** Przycisk wyczysc */
+    private JButton btn_clr = new JButton("CLR");
+    private JButton btn_del = new JButton("DEL");
+    /** Przycisk dzielenie */
+    private JButton btn_bolu = new JButton("/");
+    /** Przycisk wyniku */
+    private JButton btn_esit = new JButton("=");
+
+    /** Pole tekstowe z dzialaniem */
+    private TextField txt=new TextField(15);
+
+    private String str_number = "";
+    /** Numer dzialania */
+    private int operation = 0;
+    /** Pierwsza liczba w dzialaniu */
+    private double int_number1 = 0;
+    /** Druga liczba w dzialaniu */
+    private double int_number2 = 0;
+    /** Wynik dzialania */
+    private double result = 0;
     
-    public calculator() {
+    private JMenuItem fileItem1;
+    
+    /** Metoda prywatna pozwalajaca konstruktorowi utworzenie nowego okna o podanych wymiarach
+     * @param frame Puste okno aplikacji
+     * @param width Szerokosc okna aplikacji
+     * @param hight Wysokosc okna aplikacji 
+     * @return frame Przygotowane okno aplikacji
+     */
+    private JFrame createFrame(JFrame frame,int width, int hight)
+    {
+
+        /*-----*/
+        frame.setLocation(440,250);
+        JMenuBar menubar = new JMenuBar();
+        JMenu filemenu = new JMenu("Pomoc");
+        filemenu.add(new JSeparator());
+        fileItem1 = new JMenuItem("Pomoc           F1");
+
+        fileItem1.addActionListener(this);
+        filemenu.add(fileItem1);
+        menubar.add(filemenu);
+        frame.setJMenuBar(menubar);
         
-        JFrame frame = new JFrame("SIMPLE JAVA CALCULATOR");
-        frame.setSize(320,320);
+        /*-----*/
+        frame.setSize(width,hight);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setVisible(true);
-        
         frame.setLayout(new BorderLayout());
+
+        return frame;
+    }
+    
+    /**
+     * Metoda prywatna wykonujaca operacje dodawania
+     * @param txt Pole tekstowe, w ktorym wyswietlany jest wynik operacji dodawania
+     */
+    private void Dodawanie(TextField txt)
+    {
+        String[] kelime = null;
+        kelime = str_number.split("\\+");
+        int_number2=Integer.parseInt(kelime[1].replace("=",""));
+        result=int_number1+int_number2;
+        txt.setText(str_number+Double.toString(result));
+    }
+    
+    
+    /**
+     * Metoda prywatna wykonujaca operacje odejmowania
+     * @param txt Pole tekstowe, w ktorym wyswietlany jest wynik operacji odejmowania
+     */
+    private void Odejmowanie(TextField txt)
+    {
+        String[] kelime = null;
+        kelime = str_number.split("\\-");
+        int_number2=Integer.parseInt(kelime[1].replace("=",""));
+        result=int_number1-int_number2;
+        txt.setText(str_number+Double.toString(result));
+    }
+    
+    
+    /**
+     * Metoda prywatna wykonujaca operacje mnozenia
+     * @param txt Pole tekstowe, w ktorym wyswietlany jest wynik operacji mnozenia
+     */
+    private void Mnozenie(TextField txt)
+    {
+    	 String[] kelime = null;
+         kelime = str_number.split("\\*");
+         int_number2=Integer.parseInt(kelime[1].replace("=",""));
+         result=int_number1*int_number2;
+         txt.setText(str_number+Double.toString(result));
+    }
+    
+    /**
+     * Metoda prywatna wykonujaca operacje dzielenia
+     * @param txt Pole tekstowe, w ktorym wyswietlany jest wynik operacji dzielenia
+     */
+    private void Dzielenie(TextField txt)
+    {
+        String[] kelime = null;
+        kelime = str_number.split("\\/");
+        int_number2=Integer.parseInt(kelime[1].replace("=",""));
+        result=int_number1/int_number2;
+        txt.setText(str_number+Double.toString(result));
+    }
+    
+    /**
+     * Publiczny kontruktor bezparametrowy 
+     */
+
+    public calculator() {
         
+    	JFrame frame = new JFrame("SIMPLE JAVA CALCULATOR");
+        createFrame(frame,320,320);
+        frame.addKeyListener(this);
+
         JPanel HeadPanel = new JPanel();
         JPanel NumberPanel = new JPanel();
         JPanel LabelPanel = new JPanel();
@@ -112,12 +232,26 @@ class calculator extends JFrame implements ActionListener {
         
     }
     
+    
+    /**
+     * Publiczna metoda wykonujaca akcje poszczegolnego przycisku
+     * @param e ActionEvent
+     */
+    
     public void actionPerformed(ActionEvent e) {
         
     if(e.getSource()==btn1) {
            txt.setText("1");
            str_number+=txt.getText();
            txt.setText(str_number); }
+    
+    else if(e.getSource()==fileItem1)
+    {
+    	new Pomoc();
+    }
+
+    
+    
     else if(e.getSource()==btn2) {
            txt.setText("2");
            str_number+=txt.getText();
@@ -201,35 +335,19 @@ class calculator extends JFrame implements ActionListener {
                txt.setText(str_number);
              switch(operation) {
              case 1: {
-                    String[] kelime = null;
-                    kelime = str_number.split("\\+");
-                    int_number2=Integer.parseInt(kelime[1].replace("=",""));
-                 result=int_number1+int_number2;
-                 txt.setText(str_number+Double.toString(result));
+                  Dodawanie(txt);
                  break;
              }
              case 2: {
-                    String[] kelime = null;
-                    kelime = str_number.split("\\-");
-                    int_number2=Integer.parseInt(kelime[1].replace("=",""));
-                 result=int_number1-int_number2;
-                 txt.setText(str_number+Double.toString(result));
+            	 Odejmowanie(txt);
                  break;
              }
              case 3: {
-                    String[] kelime = null;
-                    kelime = str_number.split("\\*");
-                    int_number2=Integer.parseInt(kelime[1].replace("=",""));
-                 result=int_number1*int_number2;
-                 txt.setText(str_number+Double.toString(result));
+                   Mnozenie(txt);
                  break;
              }
              case 4: {
-                    String[] kelime = null;
-                    kelime = str_number.split("\\/");
-                    int_number2=Integer.parseInt(kelime[1].replace("=",""));
-                 result=int_number1/int_number2;
-                 txt.setText(str_number+Double.toString(result));
+            	 Dzielenie(txt);
                  break;
              }
              }
@@ -278,9 +396,110 @@ class calculator extends JFrame implements ActionListener {
      //}
 }
     
+    
+    /**
+     * Metoda glowna aplikacji, w ktorej tworzone jest okno kalkulatora
+     * @param args Parametry wywolania programu 
+     */
+    
     public static void main(String[] args) {
         
         new calculator();
         
     }
+
+	public void keyPressed(KeyEvent e) {
+
+		if(e.getKeyCode()==KeyEvent.VK_F1)
+		{
+			new Pomoc();
+		}
+		
+	}
+
+	public void keyReleased(KeyEvent e) {
+
+		
+	}
+
+	public void keyTyped(KeyEvent e) {
+	
+		
+	}
+}
+
+class Pomoc extends JFrame implements ActionListener
+{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 594972230163211856L;
+	public Pomoc()
+	{
+		JFrame frame = new JFrame();
+		frame.setSize(320,320);
+		frame.setLocation(600,100);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setResizable(false);
+        frame.setVisible(true);
+        frame.setLayout(new BorderLayout());
+        JPanel HeadPanel = new JPanel();
+        JTextArea HelpPanel = new JTextArea();
+        HelpPanel.setMargin( new Insets(10,10,10,10) );
+        HeadPanel.add(new JLabel("POMOC"));
+        HelpPanel.setLineWrap(true);
+        HelpPanel.setWrapStyleWord(true);
+        HelpPanel.setEditable(false);
+        HelpPanel.setText("\nKalkulator może służyć do wykonywania prostych obliczeń,"
+        		+ " takich jak dodawanie, odejmowanie, mnożenie i dzielenie.\n"
+        		+ "Obliczenia można przeprowadzać klikając przyciski kalkulatora.\n\n"
+        		+ "1. Wprowadź pierwszą liczbę klikając na odpowiednie cyfry.\n"
+        		+ "2. Wybierz działanie +,-,* lub /. \n"
+        		+ "3. Wprowadź drugą liczbę klikając na odpowiednie cyfry.\n"
+        		+ "4. Po kliknięciu przycisku = otrzymasz wynik w polu tekstowym.\n"
+        		+ "5. Kliknięcie przycisku CLR powoduje wyczyszczenie ekranu.\n"
+        		);
+       // frame.add(HeadPanel,BorderLayout.NORTH);
+        JPanel panel=new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = 1;
+        panel.add(HeadPanel,c);
+        
+        BufferedImage myPicture = null;
+		try {
+			myPicture = ImageIO.read(new File("res/kalk.PNG"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 1;
+        panel.add(HelpPanel,c);
+        
+        JLabel jl = new JLabel("\n");
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 2;
+        panel.add(jl,c);
+        JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 3;
+        panel.add(picLabel,c);
+
+      JScrollPane scrollBar=new JScrollPane(panel,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+      frame.add(scrollBar);
+	}
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }
