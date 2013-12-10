@@ -3,8 +3,14 @@ package com.matus;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
+import java.awt.image.ImageProducer;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -23,7 +29,57 @@ import javax.swing.*;
 
  
 public class calculator extends JFrame implements ActionListener,KeyListener{ 
-    
+	 MenuItem exitItem;
+	 TrayIcon trayIcon;
+	 
+	 MenuItem sItem;
+     MenuItem s2Item;
+     
+     final static String PREF_NAME = "THEME";
+	
+	private void Ikona()
+	{
+		 if (!SystemTray.isSupported()) {
+	            System.out.println("SystemTray is not supported");
+	            return;
+	        }
+	      final PopupMenu popup = new PopupMenu();
+	        
+	        BufferedImage myPicture = null;
+			try {
+				myPicture = ImageIO.read(new File("res/calc.gif"));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	        trayIcon =
+	                new TrayIcon(myPicture);
+	        final SystemTray tray = SystemTray.getSystemTray();
+	       
+	        // Create a pop-up menu components
+
+	        Menu displayMenu = new Menu("Skórka");
+	        sItem = new MenuItem("Domyślna");
+	        s2Item = new MenuItem("Śmieszna");
+	        sItem.addActionListener(this);
+	        s2Item.addActionListener(this);
+	        displayMenu.add(s2Item);
+	        displayMenu.add(sItem);
+	        exitItem = new MenuItem("Exit");
+	       
+	        exitItem.addActionListener(this);
+	        //Add components to pop-up menu
+	        popup.add(displayMenu);
+	        popup.add(exitItem);
+	       
+	        trayIcon.setPopupMenu(popup);
+	       
+	        try {
+	            tray.add(trayIcon);
+	        } catch (AWTException e) {
+	            System.out.println("TrayIcon could not be added.");
+	        }
+	}
 
 	private static final long serialVersionUID = -4211365542340727420L;
 	/** Przycisk cyfra 1 */
@@ -75,6 +131,7 @@ public class calculator extends JFrame implements ActionListener,KeyListener{
     private double result = 0;
     
     private JMenuItem fileItem1;
+    JFrame frame;
     
     /** Metoda prywatna pozwalajaca konstruktorowi utworzenie nowego okna o podanych wymiarach
      * @param frame Puste okno aplikacji
@@ -167,7 +224,7 @@ public class calculator extends JFrame implements ActionListener,KeyListener{
 
     public calculator() {
         
-    	JFrame frame = new JFrame("SIMPLE JAVA CALCULATOR");
+    	frame = new JFrame("SIMPLE JAVA CALCULATOR");
         createFrame(frame,320,320);
         frame.addKeyListener(this);
 
@@ -222,6 +279,7 @@ public class calculator extends JFrame implements ActionListener,KeyListener{
         LabelPanel.add(btn_esit);
         btn_esit.addActionListener(this);
         
+        
         txt.setEditable(false);
         btn_del.setEnabled(false);
              
@@ -230,6 +288,14 @@ public class calculator extends JFrame implements ActionListener,KeyListener{
         frame.add(NumberPanel,BorderLayout.CENTER);
         frame.add(LabelPanel,BorderLayout.SOUTH);
         
+        Ikona();
+    }
+    
+    public void showNotification(String title, String msg) {
+        if (SystemTray.isSupported()) {
+            trayIcon.displayMessage(title, msg, TrayIcon.MessageType.INFO);
+
+        }
     }
     
     
@@ -247,7 +313,80 @@ public class calculator extends JFrame implements ActionListener,KeyListener{
     
     else if(e.getSource()==fileItem1)
     {
-    	new Pomoc();
+    	new Pomoc(1);
+    }
+    
+    else if(e.getSource()==exitItem)
+    {
+    	System.exit(0);
+    }
+    else if(e.getSource()==s2Item)
+    {
+    
+    	String newValue = "com.sun.java.swing.plaf.motif.MotifLookAndFeel";
+    	 try {
+ 			UIManager.setLookAndFeel(newValue);
+ 		} catch (ClassNotFoundException e1) {
+ 			// TODO Auto-generated catch block
+ 			e1.printStackTrace();
+ 		} catch (InstantiationException e1) {
+ 			// TODO Auto-generated catch block
+ 			e1.printStackTrace();
+ 		} catch (IllegalAccessException e1) {
+ 			// TODO Auto-generated catch block
+ 			e1.printStackTrace();
+ 		} catch (UnsupportedLookAndFeelException e1) {
+ 			// TODO Auto-generated catch block
+ 			e1.printStackTrace();
+ 		}
+         
+         Preferences prefs = Preferences.userNodeForPackage(com.matus.calculator.class);
+
+         
+
+      // Set the value of the preference
+      
+      prefs.put(PREF_NAME, newValue);
+      
+      SwingUtilities.updateComponentTreeUI(frame);
+      frame.pack();
+      
+      frame.setSize(320, 320);
+    	
+    }
+    else if(e.getSource()==sItem)
+    {
+    	
+    	String newValue = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
+    	
+    	 try {
+  			UIManager.setLookAndFeel(newValue);
+  		} catch (ClassNotFoundException e1) {
+  			// TODO Auto-generated catch block
+  			e1.printStackTrace();
+  		} catch (InstantiationException e1) {
+  			// TODO Auto-generated catch block
+  			e1.printStackTrace();
+  		} catch (IllegalAccessException e1) {
+  			// TODO Auto-generated catch block
+  			e1.printStackTrace();
+  		} catch (UnsupportedLookAndFeelException e1) {
+  			// TODO Auto-generated catch block
+  			e1.printStackTrace();
+  		}
+          
+          Preferences prefs = Preferences.userNodeForPackage(com.matus.calculator.class);
+
+       // Preference key name
+ 
+       // Set the value of the preference
+       
+       prefs.put(PREF_NAME, newValue);
+       
+       SwingUtilities.updateComponentTreeUI(frame);
+       frame.pack();
+       frame.setSize(320, 320);
+    	
     }
 
     
@@ -336,18 +475,22 @@ public class calculator extends JFrame implements ActionListener,KeyListener{
              switch(operation) {
              case 1: {
                   Dodawanie(txt);
+                  showNotification("Informacja", "Wykonałeś dodawanie");
                  break;
              }
              case 2: {
             	 Odejmowanie(txt);
+            	 showNotification("Informacja", "Wykonałeś odejmowanie");
                  break;
              }
              case 3: {
                    Mnozenie(txt);
+                   showNotification("Informacja", "Wykonałeś mnożenie");
                  break;
              }
              case 4: {
             	 Dzielenie(txt);
+            	 showNotification("Informacja", "Wykonałeś dzielenie");
                  break;
              }
              }
@@ -404,6 +547,34 @@ public class calculator extends JFrame implements ActionListener,KeyListener{
     
     public static void main(String[] args) {
         
+    	 Preferences prefs = Preferences.userNodeForPackage(com.matus.calculator.class);
+         String defaultValue = "default string";
+         String propertyValue = prefs.get(PREF_NAME, defaultValue);
+
+      	 try {
+   			UIManager.setLookAndFeel(propertyValue);
+   		} catch (ClassNotFoundException e1) {
+   			// TODO Auto-generated catch block
+   			e1.printStackTrace();
+   		} catch (InstantiationException e1) {
+   			// TODO Auto-generated catch block
+   			e1.printStackTrace();
+   		} catch (IllegalAccessException e1) {
+   			// TODO Auto-generated catch block
+   			e1.printStackTrace();
+   		} catch (UnsupportedLookAndFeelException e1) {
+   			// TODO Auto-generated catch block
+   			e1.printStackTrace();
+   		}
+              
+        
+       
+
+     // Get the value of the preference;
+     // default value is returned if the preference does not exist
+   
+     
+     // "a string"
         new calculator();
         
     }
@@ -412,7 +583,12 @@ public class calculator extends JFrame implements ActionListener,KeyListener{
 
 		if(e.getKeyCode()==KeyEvent.VK_F1)
 		{
-			new Pomoc();
+			new Pomoc(1);
+		}
+		else if
+		(e.getKeyCode()==KeyEvent.VK_F2)
+		{
+			new Pomoc(2);
 		}
 		
 	}
@@ -435,7 +611,7 @@ class Pomoc extends JFrame implements ActionListener
 	 * 
 	 */
 	private static final long serialVersionUID = 594972230163211856L;
-	public Pomoc()
+	public Pomoc(int i)
 	{
 		JFrame frame = new JFrame();
 		frame.setSize(320,320);
@@ -451,15 +627,24 @@ class Pomoc extends JFrame implements ActionListener
         HelpPanel.setLineWrap(true);
         HelpPanel.setWrapStyleWord(true);
         HelpPanel.setEditable(false);
-        HelpPanel.setText("\nKalkulator może służyć do wykonywania prostych obliczeń,"
-        		+ " takich jak dodawanie, odejmowanie, mnożenie i dzielenie.\n"
-        		+ "Obliczenia można przeprowadzać klikając przyciski kalkulatora.\n\n"
-        		+ "1. Wprowadź pierwszą liczbę klikając na odpowiednie cyfry.\n"
-        		+ "2. Wybierz działanie +,-,* lub /. \n"
-        		+ "3. Wprowadź drugą liczbę klikając na odpowiednie cyfry.\n"
-        		+ "4. Po kliknięciu przycisku = otrzymasz wynik w polu tekstowym.\n"
-        		+ "5. Kliknięcie przycisku CLR powoduje wyczyszczenie ekranu.\n"
-        		);
+        
+        if(i==1)
+        {
+	        HelpPanel.setText("\nKalkulator może służyć do wykonywania prostych obliczeń,"
+	        		+ " takich jak dodawanie, odejmowanie, mnożenie i dzielenie.\n"
+	        		+ "Obliczenia można przeprowadzać klikając przyciski kalkulatora.\n\n"
+	        		+ "1. Wprowadź pierwszą liczbę klikając na odpowiednie cyfry.\n"
+	        		+ "2. Wybierz działanie +,-,* lub /. \n"
+	        		+ "3. Wprowadź drugą liczbę klikając na odpowiednie cyfry.\n"
+	        		+ "4. Po kliknięciu przycisku = otrzymasz wynik w polu tekstowym.\n"
+	        		+ "5. Kliknięcie przycisku CLR powoduje wyczyszczenie ekranu.\n"
+	        		);
+        }
+        else if(i==2)
+        {
+        	HelpPanel.setText("\n Pomoc F2\n"
+	        		);
+        }
        // frame.add(HeadPanel,BorderLayout.NORTH);
         JPanel panel=new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
